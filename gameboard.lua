@@ -4,23 +4,24 @@ local Block  = require('block')
 
 local Board = {}
 
-function Board.init(width, height, tilesize, img)
-  Board.width    = width;
-  Board.height   = height;
-  Board.tilesize = tilesize;
-  Board.img      = img
+function Board.init(width, height, tilesize, tileImg, curImg)
+  Board.width    = width
+  Board.height   = height
+  Board.tilesize = tilesize
+  Board.tileImg  = tileImg
+  Board.curImg   = curImg
 
   Board.curX = math.ceil(width/2)
   Board.curY = math.ceil(height/2)
 
   Board.tweens = Tweens:new()
 
-  Board.quads = Utils.createSlices(tilesize, tilesize, img:getDimensions())
+  Board.quads = Utils.createSlices(tilesize, tilesize, tileImg:getDimensions())
   Board._generateAllPieces()
   Board._generateBoard()
   Board._updateDrawPieces()
 
-  Board.rotate(2, 0, 1)
+  Board.rotate(0, 1)
 
 end
 
@@ -87,7 +88,6 @@ end
 
 -- TODO: DEJANKIFY
 function Board._updateDrawPieces()
-  print("updating")
   Board.drawPieces = {}
   -- initialize with nil for simplicity of later code
   for x = 0, Board.width + 1 do
@@ -102,7 +102,7 @@ function Board._updateDrawPieces()
     for y = 1, Board.height do
       local q = Board.quads[Board.pieces[x][y]]
       if q then
-        Board.drawPieces[x][y] = Block:new(Board.img, q, x-1, y-1)
+        Board.drawPieces[x][y] = Block:new(Board.tileImg, q, x-1, y-1)
       end
     end
   end
@@ -110,62 +110,96 @@ function Board._updateDrawPieces()
   for x = 1, Board.width do
     local q = Board.quads[Board.pieces[x][Board.height]]
     if q then
-      Board.drawPieces[x][Board.height+1] = Block:new(Board.img, q, x-1, -1)
+      Board.drawPieces[x][Board.height+1] = Block:new(Board.tileImg, q, x-1, -1)
     end
     q = Board.quads[Board.pieces[x][1]]
     if q then
-      Board.drawPieces[x][0] = Block:new(Board.img, q, x-1, (Board.width+1) - 1)
+      Board.drawPieces[x][0] = Block:new(Board.tileImg, q, x-1, (Board.width+1) - 1)
     end
   end
 
   for y = 1, Board.height do
     local q = Board.quads[Board.pieces[Board.width][y]]
     if q then
-      Board.drawPieces[Board.width+1][y] = Block:new(Board.img, q, -1, y-1)
+      Board.drawPieces[Board.width+1][y] = Block:new(Board.tileImg, q, -1, y-1)
     end
     q = Board.quads[Board.pieces[1][y]]
     if q then
-      Board.drawPieces[0][y] = Block:new(Board.img, q, (Board.height+1) - 1, y-1)
+      Board.drawPieces[0][y] = Block:new(Board.tileImg, q, (Board.height+1) - 1, y-1)
     end
   end
 
 end
 
-function Board.rotate(row, col, dir)
-  row = row or 0
-  col = col or 0
+function Board.rotate(x, y)
+  x = x or 0
+  y = y or 0
 
-  if row ~= 0 then
-    if dir < 0 then
-      local tmp = Board.pieces[1][row]
-      for x = 1,Board.width - 1 do
-        Board.pieces[x][row] = Board.pieces[x+1][row]
+  if x ~= 0 then
+    local dir
+    if x < 0 then
+      local tmp = Board.pieces[1][Board.curY]
+      for xi = 1,Board.width - 1 do
+        Board.pieces[xi][Board.curY] = Board.pieces[xi+1][Board.curY]
       end
-      Board.pieces[Board.width][row] = tmp
+      Board.pieces[Board.width][Board.curY] = tmp
 
       dir = -1
     else
-      local tmp = Board.pieces[Board.width][row]
-      for x = Board.width,2,-1 do
-        Board.pieces[x][row] = Board.pieces[x-1][row]
+      local tmp = Board.pieces[Board.width][Board.curY]
+      for xi = Board.width,2,-1 do
+        Board.pieces[xi][Board.curY] = Board.pieces[xi-1][Board.curY]
       end
-      Board.pieces[1][row] = tmp
+      Board.pieces[1][Board.curY] = tmp
 
       dir = 1
     end
 
-    for x = 0, Board.width + 1 do
+    for xi = 0, Board.width + 1 do
       local callback = nil
-      if x == 0 then
+      if xi == 0 then
         callback = Board._updateDrawPieces
       end
       Board.tweens:addTween(0, dir, 0.5,
       function(v)
-        Board.drawPieces[x][row].xoff = v
+        Board.drawPieces[xi][Board.curY].xoff = v
       end,
       callback,
       "quad")
     end
+
+  elseif y ~= 0 then
+    local dir
+    if y < 0 then
+      local tmp = Board.pieces[Board.curX][1]
+      for yi = 1, Board.height-1 do
+        Board.pieces[Board.curX][yi] = Board.pieces[Board.curX][yi+1]
+      end
+      Board.pieces[Board.curX][Board.height] = tmp
+      dir = -1
+    else
+      local tmp = Board.pieces[Board.curX][Board.height]
+      for yi = Board.height,2,-1 do
+        Board.pieces[Board.curX][yi] = Board.pieces[Board.curX][yi-1]
+      end
+      Board.pieces[Board.curX][1] = tmp
+
+      dir = 1
+    end
+
+    for yi = 0, Board.height + 1 do
+      local callback = nil
+      if yi == 0 then
+        callback = Board._updateDrawPieces
+      end
+      Board.tweens:addTween(0, dir, 0.5,
+      function(v)
+        Board.drawPieces[Board.curX][yi].yoff = v
+      end,
+      callback,
+      "quad")
+    end
+
 
   end
 end
