@@ -1,4 +1,4 @@
-local Board = require('gameboard')
+local Board = require('board')
 
 local scale = 2
 

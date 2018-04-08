@@ -23,8 +23,6 @@ function Board.init(width, height, tilesize, tileImg, curImg)
   Board._generateBoard()
   Board._updateDrawPieces()
 
-  Board.rotate(0, 1)
-
 end
 
 function Board.getScreenWidth()
