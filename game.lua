@@ -47,9 +47,9 @@ function Game.keypressed(keystr)
   local movement = moves[keystr]
   if movement then
     if love.keyboard.isDown("lshift") or love.keyboard.isDown("rshift") then
-      Board.rotate(unpack(movement))
+      Board.rotate(table.unpack(movement))
     else
-      Board.moveCursor(unpack(movement))
+      Board.moveCursor(table.unpack(movement))
     end
   end
 
