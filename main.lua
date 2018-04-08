@@ -7,6 +7,5 @@ table.unpack = unpack
 function love.load()
   love.graphics.setDefaultFilter("nearest", "nearest")
 
-  States.bootstrap()
   States.push(Game)
 end
