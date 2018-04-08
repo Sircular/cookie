@@ -1,18 +1,25 @@
 local Tweens = {}
 
 local tweenFuncs = {
-  linear = function(x)
-    return x
+  linear = function(t)
+    return t
   end,
-  quad = function(x)
-    if x < 0.5 then
-      return 2*x*x
+  quad = function(t)
+    if t < 0.5 then
+      return 2*t*t
     else
-      return -1 + (4-2*x) * x
+      return -1 + (4-2*t) * t
     end
   end,
-  quadOut = function(x)
-    return -((x-1)*(x-1)) + 1
+  quadOut = function(t)
+    return -((t-1)*(t-1)) + 1
+  end,
+  elasticOut = function(t)
+    -- homegrown implementation awaits!
+    local shift = 1.25
+    local target = math.sin(shift*(math.pi/2))
+    local adj   = t*shift * (math.pi/2)
+    return math.sin(adj)/target
   end
 }
 

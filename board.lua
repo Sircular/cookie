@@ -15,6 +15,7 @@ function Board.init(width, height, tilesize, tileImg, curImg)
   Board.curY = math.ceil(height/2)
 
   Board.shiftTime = 0.12
+  Board.shiftTween = "elasticOut"
 
   Board.tweens = Tweens:new()
 
@@ -165,7 +166,7 @@ function Board.rotate(x, y)
         Board.drawPieces[xi][Board.curY].xoff = v
       end,
       callback,
-      "quadOut")
+      Board.shiftTween)
     end
 
   elseif y ~= 0 then
@@ -197,7 +198,7 @@ function Board.rotate(x, y)
         Board.drawPieces[Board.curX][yi].yoff = v
       end,
       callback,
-      "quadOut")
+      Board.shiftTween)
     end
 
 
