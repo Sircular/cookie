@@ -14,7 +14,7 @@ function Board.init(width, height, tilesize, tileImg, curImg)
   Board.curX = math.ceil(width/2)
   Board.curY = math.ceil(height/2)
 
-  Board.shiftTime = 0.2
+  Board.shiftTime = 0.12
 
   Board.tweens = Tweens:new()
 
