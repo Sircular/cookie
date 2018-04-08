@@ -1,4 +1,6 @@
-local Game = {handlers = {}}
+local States = require('lib/stateful')
+
+local Game = States.newState()
 
 local Board = require("board")
 

@@ -87,6 +87,47 @@ function Board._getUnusedPieces()
   return Utils.subtractTables(Board.allPieces, Board._getUsedPieces())
 end
 
+function Board._checkForCompleteLines()
+  -- we only need to check in one direction
+  local cleared = 0
+
+  for col = 1, Board.width do
+    local found = true
+    local comp = Board.pieces[col][1]
+    for row = 2, Board.height do
+      if Board.pieces[col][row] ~= comp then
+        found = false
+        break
+      end
+    end
+    if found then
+      cleared = cleared + 1
+      Board._clearLine(col, nil)
+    end
+  end
+
+  if cleared == 0 then
+    for row = 1, Board.height do
+      local found = true
+      local comp = Board.pieces[1][row]
+      for col = 2, Board.width do
+        if Board.pieces[col][row] ~= comp then
+          found = false
+          break
+        end
+      end
+      if found then
+        cleared = cleared + 1
+        Board._clearLine(nil, row)
+      end
+    end
+  end
+
+  if cleared > 0 then
+    love.event.push("clearedLines", cleared)
+  end
+end
+
 -- TODO: DEJANKIFY
 function Board._updateDrawPieces()
   Board.drawPieces = {}
@@ -130,6 +171,15 @@ function Board._updateDrawPieces()
     end
   end
 
+end
+
+function Board._clearLine(col, row)
+  -- assume col over row
+  if col then
+
+  elseif row then
+
+  end
 end
 
 function Board.rotate(x, y)
@@ -190,7 +240,10 @@ function Board.rotate(x, y)
     for i = 1, #shiftPieces do
       local callback = nil
       if i == 1 then
-        callback = Board._updateDrawPieces
+        callback = function()
+          Board._updateDrawPieces()
+          Board._checkForCompleteLines()
+        end
       end
 
       Board.tweens:addTween(0, dir, Board.shiftTime,
