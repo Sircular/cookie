@@ -33,7 +33,7 @@ function Tweens:new()
   return tw
 end
 
-function Tweens:addTween(start, stop, length, updateCallback, endCallback, method)
+function Tweens:addTween(start, stop, length, updateCallback, method, endCallback)
   local newTween = {
     start          = start,
     stop           = stop,

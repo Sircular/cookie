@@ -136,8 +136,10 @@ function Board.rotate(x, y)
   x = x or 0
   y = y or 0
 
+  local dir
+  local attrName
+  local shiftPieces = {}
   if x ~= 0 then
-    local dir
     if x < 0 then
       local tmp = Board.pieces[1][Board.curY]
       for xi = 1,Board.width - 1 do
@@ -156,24 +158,11 @@ function Board.rotate(x, y)
       dir = 1
     end
 
+    attrName = "xoff"
     for xi = 0, Board.width + 1 do
-      local callback = nil
-      if xi == 0 then
-        callback = function()
-          Board._updateDrawPieces()
-          love.event.push("rotated")
-        end
-      end
-      Board.tweens:addTween(0, dir, Board.shiftTime,
-      function(v)
-        Board.drawPieces[xi][Board.curY].xoff = v
-      end,
-      callback,
-      Board.shiftTween)
+      table.insert(shiftPieces, Board.drawPieces[xi][Board.curY])
     end
-
   elseif y ~= 0 then
-    local dir
     if y < 0 then
       local tmp = Board.pieces[Board.curX][1]
       for yi = 1, Board.height-1 do
@@ -191,20 +180,27 @@ function Board.rotate(x, y)
       dir = 1
     end
 
+    attrName = "yoff"
     for yi = 0, Board.height + 1 do
+      table.insert(shiftPieces, Board.drawPieces[Board.curX][yi])
+    end
+  end
+
+  if #shiftPieces > 0 then
+    for i = 1, #shiftPieces do
       local callback = nil
-      if yi == 0 then
+      if i == 1 then
         callback = Board._updateDrawPieces
       end
+
       Board.tweens:addTween(0, dir, Board.shiftTime,
       function(v)
-        Board.drawPieces[Board.curX][yi].yoff = v
+        shiftPieces[i][attrName] = v
       end,
-      callback,
-      Board.shiftTween)
+      "elasticOut",
+      callback
+      )
     end
-
-
   end
 end
 
