@@ -75,4 +75,10 @@ function States.pop()
   end
 end
 
+function States.newState()
+  return {
+    handlers = {}
+  }
+end
+
 return States
