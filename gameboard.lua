@@ -14,6 +14,8 @@ function Board.init(width, height, tilesize, tileImg, curImg)
   Board.curX = math.ceil(width/2)
   Board.curY = math.ceil(height/2)
 
+  Board.shiftTime = 0.2
+
   Board.tweens = Tweens:new()
 
   Board.quads = Utils.createSlices(tilesize, tilesize, tileImg:getDimensions())
@@ -160,7 +162,7 @@ function Board.rotate(x, y)
       if xi == 0 then
         callback = Board._updateDrawPieces
       end
-      Board.tweens:addTween(0, dir, 0.5,
+      Board.tweens:addTween(0, dir, Board.shiftTime,
       function(v)
         Board.drawPieces[xi][Board.curY].xoff = v
       end,
@@ -192,7 +194,7 @@ function Board.rotate(x, y)
       if yi == 0 then
         callback = Board._updateDrawPieces
       end
-      Board.tweens:addTween(0, dir, 0.5,
+      Board.tweens:addTween(0, dir, Board.shiftTime,
       function(v)
         Board.drawPieces[Board.curX][yi].yoff = v
       end,
@@ -202,6 +204,11 @@ function Board.rotate(x, y)
 
 
   end
+end
+
+function Board.moveCursor(x, y)
+  Board.curX = math.max(1, math.min(Board.curX + x, Board.width))
+  Board.curY = math.max(1, math.min(Board.curY + y, Board.height))
 end
 
 function Board.update(dt)
@@ -216,6 +223,12 @@ function Board.draw()
       end
     end
   end
+
+  local centerX = Board.tilesize * (Board.curX-0.5)
+  local centerY = Board.tilesize * (Board.curY-0.5)
+  local ci      = Board.curImg -- I got lazy
+
+  love.graphics.draw(ci, centerX-(ci:getWidth()/2), centerY-(ci:getHeight()/2))
 end
 
 return Board
