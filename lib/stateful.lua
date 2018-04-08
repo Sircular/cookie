@@ -67,12 +67,13 @@ function States.pop()
   States._unbootstrap(stack[#stack])
   stack[#stack] = nil
 
-  States._bootstrap(stack[#stack])
-  _runSafe(stack[#stack], "resume")
-
   if #stack == 0 and States.exitOnEmpty then
     love.event.quit()
   end
+
+  States._bootstrap(stack[#stack])
+  _runSafe(stack[#stack], "resume")
+
 end
 
 function States.newState()
