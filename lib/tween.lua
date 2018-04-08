@@ -10,6 +10,9 @@ local tweenFuncs = {
     else
       return -1 + (4-2*x) * x
     end
+  end,
+  quadOut = function(x)
+    return -((x-1)*(x-1)) + 1
   end
 }
 

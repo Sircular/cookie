@@ -165,7 +165,7 @@ function Board.rotate(x, y)
         Board.drawPieces[xi][Board.curY].xoff = v
       end,
       callback,
-      "quad")
+      "quadOut")
     end
 
   elseif y ~= 0 then
@@ -197,7 +197,7 @@ function Board.rotate(x, y)
         Board.drawPieces[Board.curX][yi].yoff = v
       end,
       callback,
-      "quad")
+      "quadOut")
     end
 
 
