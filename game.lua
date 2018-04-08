@@ -1,4 +1,4 @@
-local Game = {}
+local Game = {handlers = {}}
 
 local Board = require("board")
 
@@ -53,6 +53,10 @@ function Game.keypressed(keystr)
     end
   end
 
+end
+
+function Game.handlers.rotated()
+  print("yes")
 end
 
 return Game

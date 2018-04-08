@@ -159,7 +159,10 @@ function Board.rotate(x, y)
     for xi = 0, Board.width + 1 do
       local callback = nil
       if xi == 0 then
-        callback = Board._updateDrawPieces
+        callback = function()
+          Board._updateDrawPieces()
+          love.event.push("rotated")
+        end
       end
       Board.tweens:addTween(0, dir, Board.shiftTime,
       function(v)

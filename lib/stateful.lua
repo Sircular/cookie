@@ -30,17 +30,45 @@ function States.bootstrap()
   end
 end
 
+-- special case that sets up handlers for special events
+-- called from push and pop
+
+function States._bootstrapHandlers(state)
+  if state and state.handlers then
+    for k, v in pairs(state.handlers) do
+      love.handlers[k] = v
+    end
+  end
+end
+
+-- hopefully this doesn't break anything important
+function States._unbootstrapHandlers(state)
+  if state and state.handlers then
+    for k, _ in pairs(state.handlers) do
+      love.handlers[k] = nil
+    end
+  end
+end
+
 function States.push(state)
   local stack = States.stateStack
+
+  States._unbootstrapHandlers(stack[#stack])
   _runSafe(stack[#stack], "suspend")
+
+  States._bootstrapHandlers(state)
   stack[#stack] = state
   _runSafe(stack[#stack], "enter")
 end
 
 function States.pop()
   local stack = States.stateStack
+
   _runSafe(stack[#stack], "exit")
+  States._unbootstrapHandlers(stack[#stack])
   stack[#stack] = nil
+
+  States._bootstrapHandlers(stack[#stack])
   _runSafe(stack[#stack], "resume")
 
   if #stack == 0 and States.exitOnEmpty then
