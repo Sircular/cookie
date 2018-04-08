@@ -1,13 +1,17 @@
 local Board = require('gameboard')
 
-local boardcanvas
+local scale = 2
 
+local boardcanvas
 function love.load()
+  love.graphics.setDefaultFilter("nearest", "nearest")
+
   local tileImg   = love.graphics.newImage("img/imgs.png")
   local cursorImg = love.graphics.newImage("img/cursor.png")
   Board.init(5, 5, 32, tileImg, cursorImg)
   
   boardcanvas = love.graphics.newCanvas(5*32, 5*32)
+
 end
 
 function love.update(dt)
@@ -24,8 +28,11 @@ function love.draw()
 
   -- center it on the screen
   local w, h = love.graphics.getDimensions()
-  love.graphics.draw(boardcanvas, (w-Board.getScreenWidth())/2,
-      (h-Board.getScreenHeight())/2)
+
+  -- scaled values
+  local bw = Board.getScreenWidth()*scale
+  local bh = Board.getScreenWidth()*scale
+  love.graphics.draw(boardcanvas, (w-bw)/2, (h-bh)/2, 0, scale, scale)
 
 end
 
