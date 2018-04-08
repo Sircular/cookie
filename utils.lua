@@ -36,4 +36,22 @@ function Utils.shuffle(t)
   end
 end
 
+-- subtracts table b from table a
+-- returns a copy
+function Utils.subtractTables(a, b)
+  local ta = {unpack(a)}
+
+  -- probably should find a better way to do this
+  for i = 1, #b do
+    for j = 1,#ta do
+      if b[i] == ta[j] then
+        table.remove(ta, i)
+        break
+      end
+    end
+  end
+
+  return ta
+end
+
 return Utils

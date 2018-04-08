@@ -10,7 +10,7 @@ function love.load()
 end
 
 function love.update(dt)
-  -- do nothing
+  Board.update(dt)
 end
 
 function love.draw()
