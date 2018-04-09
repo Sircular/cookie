@@ -16,6 +16,7 @@ function Board.init(width, height, tilesize, tileImg, curImg)
 
   Board.shiftTime = 0.12
   Board.shiftTween = "elasticOut"
+  Board.clearTime = 0.5
 
   Board.tweens = Tweens:new()
 
@@ -174,11 +175,64 @@ function Board._updateDrawPieces()
 end
 
 function Board._clearLine(col, row)
+
   -- assume col over row
   if col then
+    -- for when the tween ends
+    -- I know this is jank, ugh
+    -- TODO fix
+    local callback = function()
+      Board._generateBoard()
+      Board._updateDrawPieces()
+      for y = 1, Board.height do
+        Board.tweens:addTween(-Board.height, 0, Board.clearTime,
+        function(v)
+          Board.drawPieces[col][y].yoff = v
+        end,
+        "quad",
+        nil)
+      end
+    end
 
+    for y = 1, Board.height do
+      Board.pieces[col][y] = 0
+
+      Board.tweens:addTween(0, Board.height, Board.clearTime,
+      function(v)
+        Board.drawPieces[col][y].yoff = v
+      end,
+      "quad",
+      callback)
+
+      callback = nil
+    end
   elseif row then
+    -- and agauh ugh TODO
+    local callback = function()
+      Board._generateBoard()
+      Board._updateDrawPieces()
+      for x = 1, Board.width do
+        Board.tweens:addTween(-Board.width, 0, Board.clearTime,
+        function(v)
+          Board.drawPieces[x][row].xoff = v
+        end,
+        "quad",
+        nil)
+      end
+    end
 
+    for x = 1, Board.width do
+      Board.pieces[x][row] = 0
+
+      Board.tweens:addTween(0, Board.width, Board.clearTime,
+      function(v)
+        Board.drawPieces[x][row].xoff = v
+      end,
+      "quad",
+      callback)
+
+      callback = nil
+    end
   end
 end
 
