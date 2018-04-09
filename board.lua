@@ -44,7 +44,7 @@ function Board._generateAllPieces()
 
   local unique = math.min(Board.width, Board.height)
   -- make sure that there are extras
-  local reps = 1 + math.floor((Board.width * Board.height)/unique)
+  local reps = 2 + math.floor((Board.width * Board.height)/unique)
   for i = 1, unique do
     for _ = 1, reps do
       table.insert(Board.allPieces, i)
