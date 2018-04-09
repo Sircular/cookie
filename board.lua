@@ -35,6 +35,10 @@ function Board.getScreenHeight()
   return Board.height*Board.tilesize
 end
 
+function Board.isTransitioning()
+  return Board.tweens:tweenCount() > 0
+end
+
 function Board._generateAllPieces()
   Board.allPieces = {}
 
@@ -237,6 +241,7 @@ function Board._clearLine(col, row)
 end
 
 function Board.rotate(x, y)
+  if Board.isTransitioning() then return end
   x = x or 0
   y = y or 0
 
