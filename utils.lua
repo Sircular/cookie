@@ -45,7 +45,7 @@ function Utils.subtractTables(a, b)
   for i = 1, #b do
     for j = 1,#ta do
       if b[i] == ta[j] then
-        table.remove(ta, i)
+        table.remove(ta, j)
         break
       end
     end
