@@ -57,8 +57,7 @@ function Game.keypressed(keystr)
 
 end
 
-function Game.handlers.rotated()
-  print("yes")
+function Game.handlers.clearedLines(count)
 end
 
 return Game
