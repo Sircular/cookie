@@ -19,40 +19,13 @@ end
 -- called from push and pop
 
 function States._bootstrap(state)
-  if state then
-    for _, name in pairs(eventNames) do
-      if state[name] then
-        love[name] = state[name]
-      end
-    end
-    if state.handlers then
-      for k, v in pairs(state.handlers) do
-        love.handlers[k] = v
-      end
-    end
-  end
-end
-
--- hopefully this doesn't break anything important
-function States._unbootstrap(state)
-  if state then
-    for _, name in pairs(eventNames) do
-      if state[name] then
-        love[name] = nil
-      end
-    end
-    if state.handlers then
-      for k, _ in pairs(state.handlers) do
-        love.handlers[k] = nil
-      end
-    end
-  end
+  setmetatable(love, {__index = state and state or nil})
+  setmetatable(love.handlers, {__index = (state and state.handlers) and state.handlers or nil})
 end
 
 function States.push(state)
   local stack = States.stateStack
 
-  States._unbootstrap(stack[#stack])
   _runSafe(stack[#stack], "suspend")
 
   States._bootstrap(state)
@@ -64,7 +37,6 @@ function States.pop()
   local stack = States.stateStack
 
   _runSafe(stack[#stack], "exit")
-  States._unbootstrap(stack[#stack])
   stack[#stack] = nil
 
   if #stack == 0 and States.exitOnEmpty then
