@@ -1,4 +1,5 @@
 local States = require('lib/stateful')
+local Slice9 = require('lib/slice9')
 
 local Game = States.newState()
 
@@ -8,10 +9,12 @@ local scale = 2
 
 local boardcanvas
 local bg
+local border
 
 function Game.enter()
   local tileImg   = love.graphics.newImage("img/imgs.png")
   local cursorImg = love.graphics.newImage("img/cursor.png")
+  local borderImg = love.graphics.newImage("img/border.png")
   Board.init(5, 5, 32, tileImg, cursorImg)
 
   local bgImg = love.graphics.newImage("img/bg.png")
@@ -23,6 +26,8 @@ function Game.enter()
   end
 
   boardcanvas = love.graphics.newCanvas(5*32, 5*32)
+
+  border = Slice9:new(borderImg, 4, 4, 4, 4, 8)
 
 end
 
@@ -47,6 +52,7 @@ function Game.draw()
   local bh = Board.getScreenWidth()*scale
   love.graphics.draw(bg, (w-bw)/2, (h-bh)/2, 0, scale, scale)
   love.graphics.draw(boardcanvas, (w-bw)/2, (h-bh)/2, 0, scale, scale)
+  border:draw((w-bw)/2, (h-bh)/2, 320, 320, 2)
 
 end
 
