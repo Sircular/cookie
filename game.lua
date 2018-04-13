@@ -27,7 +27,7 @@ function Game.enter()
 
   boardcanvas = love.graphics.newCanvas(5*32, 5*32)
 
-  border = Slice9:new(borderImg, 4, 4, 4, 4, 8)
+  border = Slice9:new(borderImg, 5, 5, 5, 5, 3)
 
 end
 
