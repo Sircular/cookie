@@ -1,5 +1,6 @@
 local States = require('lib/stateful')
 local Slice9 = require('lib/slice9')
+local TiledImg = require('tiledimg')
 
 local Game = States.newState()
 
@@ -18,12 +19,7 @@ function Game.enter()
   Board.init(5, 5, 32, tileImg, cursorImg)
 
   local bgImg = love.graphics.newImage("img/bg.png")
-  bg = love.graphics.newSpriteBatch(bgImg)
-  for x = 0, Board.width-1 do
-    for y = 0, Board.height-1 do
-      bg:add(x*Board.tilesize, y*Board.tilesize)
-    end
-  end
+  bg = TiledImg.new(bgImg, 5*32, 5*32)
 
   boardcanvas = love.graphics.newCanvas(5*32, 5*32)
 
