@@ -19,8 +19,6 @@ return {
     end
 
     local canvas = love.graphics.newCanvas(w, h)
-    local blend, alphaMode = love.graphics.getBlendMode()
-    love.graphics.setBlendMode("alpha", "premultiplied")
     love.graphics.setCanvas(canvas)
 
     for x = 1, math.ceil(w/imgW) do
@@ -34,7 +32,6 @@ return {
     end
 
     love.graphics.setCanvas()
-    love.graphics.setBlendMode(blend, alphaMode)
 
     return canvas
   end
